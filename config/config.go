@@ -13,7 +13,8 @@ func init() {
 	if err != nil {
 		panic(fmt.Sprintf("Could not load dotenv file: %+v\n", err))
 	}
-
+	ENV = os.Getenv("ENV")
+	API_TOKEN = os.Getenv("TELEGRAM_APITOKEN")
 	TelegramBotChannel, err = strconv.Atoi(os.Getenv("BOT_CHANNEL_ID"))
 	if err != nil {
 		panic("Could not parse Bot channel id")
@@ -22,9 +23,9 @@ func init() {
 }
 
 var (
-	ENV                = os.Getenv("ENV")
-	API_TOKEN          = os.Getenv("TELEGRAM_APITOKEN")
-	APP_NAME           = "assistment"
+	ENV                string
+	API_TOKEN          string
+	APP_NAME           = "assistme"
 	LogPath            = fmt.Sprintf("/var/log/%s/%s.log", APP_NAME, APP_NAME)
 	LogFolder          = fmt.Sprintf("/var/log/%s/", APP_NAME)
 	TelegramBotChannel int
