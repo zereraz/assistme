@@ -14,9 +14,9 @@ import (
 )
 
 func init() {
-	err := db.SetupDb()
+	_, err := db.SetupDb()
 	if err != nil {
-		l.Log.Fatalf("Could not setup db: %v", err)
+		panic(fmt.Sprintf("Could not setup db: %v", err))
 	}
 }
 
@@ -36,6 +36,6 @@ func main() {
 	if err != nil {
 		l.Log.Fatalf("Could not setup telegram bot %v", err)
 	}
-	go message.ListenToCommands(bot)
 	setupCloseHandler()
+	message.ListenToCommands(bot)
 }

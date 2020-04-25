@@ -19,10 +19,9 @@ func ListenToCommands(bot *tgbotapi.BotAPI) {
 		}
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "") //update.Message.Text)
-		fmt.Println(update.Message.Chat.ID)
 		if update.Message.IsCommand() {
 			l.Log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-			msg.Text = fmt.Sprintf("Got command %s", update.Message)
+			msg.Text = fmt.Sprintf("Got command %s", update.Message.Text)
 			msg.ReplyToMessageID = update.Message.MessageID
 			if _, err := bot.Send(msg); err != nil {
 				l.Log.Fatalf("Error while sending message: %v", err)
