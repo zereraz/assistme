@@ -10,7 +10,7 @@ A bot to assist you
     * Create reminders
 
   ## Accessibility
-    * Easily access across all items across
+    * Easily access data across devices
     * Fuzzy Query engine to access easily
     * Easy to host, extend and setup
 
@@ -18,3 +18,13 @@ A bot to assist you
     * Summary
     * Statistic
     * Data entry
+
+## Setup
+
+  ```
+  * Create telegram bot via @BotFather
+  * Clone repo
+  * Fill .env file
+  * Find bot channel Id or log it from message.go by sending a command
+  (until then dummy channel Id should do in env variable)
+  ```
