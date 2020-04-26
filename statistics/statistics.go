@@ -11,3 +11,9 @@ type Statistics struct {
 func NewStatistics() *Statistics {
 	return &Statistics{}
 }
+
+// system statistics
+type System struct {
+	UserCount int     `json:"userCount"`
+	DbSize    float64 `json:"dbSize"`
+}

@@ -18,6 +18,11 @@ var (
 	DbPath             string
 )
 
+const (
+	// key delimiter
+	KeyDelim = ":"
+)
+
 func init() {
 	err := godotenv.Load()
 	if err != nil {

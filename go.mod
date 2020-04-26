@@ -1,4 +1,4 @@
-module github.com/raunaqrox/assistme
+module github.com/zereraz/assistme
 
 go 1.13
 

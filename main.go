@@ -7,10 +7,10 @@ import (
 	"syscall"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/raunaqrox/assistme/config"
-	"github.com/raunaqrox/assistme/db"
-	l "github.com/raunaqrox/assistme/log"
-	"github.com/raunaqrox/assistme/message"
+	"github.com/zereraz/assistme/config"
+	"github.com/zereraz/assistme/db"
+	l "github.com/zereraz/assistme/log"
+	"github.com/zereraz/assistme/message"
 )
 
 func init() {

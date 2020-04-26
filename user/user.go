@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"hash/fnv"
 
 	"github.com/dgraph-io/badger"
-	"github.com/raunaqrox/assistme/policy"
-	"github.com/raunaqrox/assistme/statistics"
 	"github.com/teris-io/shortid"
+	"github.com/zereraz/assistme/config"
+	"github.com/zereraz/assistme/policy"
+	"github.com/zereraz/assistme/statistics"
+	"github.com/zereraz/assistme/utils"
 )
 
 type User struct {
@@ -22,13 +23,11 @@ type User struct {
 }
 
 func (u *User) generateHash() uint64 {
-	hash := fnv.New64a()
-	hash.Write([]byte(u.Username))
-	return hash.Sum64()
+	return utils.GenerateHash(u.Username)
 }
 
-func (u *User) generateKey() []byte {
-	return []byte(fmt.Sprintf("user:%d", u.generateHash()))
+func (u *User) GenerateKey() []byte {
+	return []byte(fmt.Sprintf("user%s%d", config.KeyDelim, u.generateHash()))
 }
 
 func (u *User) AddToDb(db *badger.DB) error {
@@ -37,10 +36,19 @@ func (u *User) AddToDb(db *badger.DB) error {
 		return err
 	}
 	err = db.Update(func(txn *badger.Txn) error {
-		err := txn.Set(u.generateKey(), userJson)
+		err := txn.Set(u.GenerateKey(), userJson)
 		return err
 	})
 	return err
+}
+
+func (u *User) IsEqual(newUser *User) bool {
+	return u.Name == newUser.Name &&
+		u.Username == newUser.Username &&
+		u.Id == newUser.Id &&
+		u.ChannelId == newUser.ChannelId &&
+		*u.Policy == *newUser.Policy &&
+		*u.Statistics == *newUser.Statistics
 }
 
 func NewUser(name, username string, channelId int64, policy *policy.Policy) (*User, error) {
@@ -52,4 +60,13 @@ func NewUser(name, username string, channelId int64, policy *policy.Policy) (*Us
 		return nil, errors.New("username cannot be empty")
 	}
 	return &User{name, username, userId, channelId, policy, statistics.NewStatistics()}, nil
+}
+
+func ToUser(marshaledUser []byte) (*User, error) {
+	user := &User{}
+	err := json.Unmarshal(marshaledUser, user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

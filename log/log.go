@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/raunaqrox/assistme/config"
 	"github.com/sirupsen/logrus"
+	"github.com/zereraz/assistme/config"
 )
 
 var Log *logrus.Logger

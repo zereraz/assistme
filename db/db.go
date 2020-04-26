@@ -2,8 +2,8 @@ package db
 
 import (
 	"github.com/dgraph-io/badger"
-	"github.com/raunaqrox/assistme/config"
-	"github.com/raunaqrox/assistme/log"
+	"github.com/zereraz/assistme/config"
+	"github.com/zereraz/assistme/log"
 )
 
 var Db *badger.DB
@@ -23,6 +23,25 @@ func GetDb() (*badger.DB, error) {
 		return Db, nil
 	}
 	return SetupDb()
+}
+
+func GetValueItem(key []byte) (*badger.Item, error) {
+	var item *badger.Item
+	db, err := GetDb()
+	if err != nil {
+		return nil, err
+	}
+	err = db.View(func(txn *badger.Txn) error {
+		item, err = txn.Get(key)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return item, nil
 }
 
 func Cleanup() {

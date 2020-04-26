@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	l "github.com/raunaqrox/assistme/log"
+	l "github.com/zereraz/assistme/log"
 )
 
 func ListenToCommands(bot *tgbotapi.BotAPI) {
