@@ -3,21 +3,27 @@ package user
 import (
 	"testing"
 
+	"github.com/dgraph-io/badger"
 	"github.com/zereraz/assistme/db"
 	"github.com/zereraz/assistme/policy"
 )
 
-func TestUserInsert(t *testing.T) {
-	currDb, err := db.GetDb()
-	username := "zereraz"
+func InsertUserToDb(username string, t *testing.T) *User {
 	user, err := NewUser("", username, 101, policy.DefaultPolicy)
 	if err != nil {
 		t.Error(err)
 	}
-	err = user.AddToDb(currDb)
+	err = user.AddToDb()
 	if err != nil {
 		t.Errorf("Could not add user to db: %v", err)
 	}
+	return user
+
+}
+
+func TestUserInsert(t *testing.T) {
+	username := "zereraz"
+	user := InsertUserToDb(username, t)
 
 	item, err := db.GetValueItem(user.GenerateKey())
 	if err != nil {
@@ -34,6 +40,21 @@ func TestUserInsert(t *testing.T) {
 		return nil
 	})
 	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDeleteUser(t *testing.T) {
+	username := "zereraz"
+	user := InsertUserToDb(username, t)
+
+	userKey := user.GenerateKey()
+	err := db.DeleteKey(userKey)
+	if err != nil {
+		t.Errorf("Could not delete user %v", err)
+	}
+	_, err = db.GetValueItem(userKey)
+	if err != badger.ErrKeyNotFound {
 		t.Error(err)
 	}
 }

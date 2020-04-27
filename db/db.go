@@ -25,6 +25,9 @@ func GetDb() (*badger.DB, error) {
 	return SetupDb()
 }
 
+// get item given value
+// will return ErrKeyNotFound
+// if key does not exist
 func GetValueItem(key []byte) (*badger.Item, error) {
 	var item *badger.Item
 	db, err := GetDb()
@@ -48,4 +51,41 @@ func Cleanup() {
 	if Db != nil {
 		Db.Close()
 	}
+}
+
+// get value given key
+func GetValue(key []byte) ([]byte, error) {
+	item, err := GetValueItem(key)
+	if err != nil {
+		return nil, err
+	}
+	val, err := GetValueFromItem(item)
+	if err != nil {
+		return nil, err
+	}
+	return val, nil
+}
+
+// given an item get value from it
+func GetValueFromItem(item *badger.Item) ([]byte, error) {
+	var valCopy []byte
+	err := item.Value(func(val []byte) error {
+		valCopy = append([]byte{}, val...)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return valCopy, nil
+}
+
+// Delete value by key
+func DeleteKey(key []byte) error {
+	currDb, err := GetDb()
+	if err != nil {
+		return err
+	}
+	return currDb.Update(func(txn *badger.Txn) error {
+		return txn.Delete(key)
+	})
 }
